@@ -52,9 +52,39 @@
 
       <section class="section remixes" id="remixes" aria-labelledby="remixes-title">
         <div class="section-heading split-heading"><div><p class="eyebrow">SELECTED TRANSMISSIONS <span>///</span> 003</p><h2 id="remixes-title">IV//STATIK<br /><em>Remixes</em></h2></div><p class="section-note">Unlicensed energy, reassembled for bigger systems. Watch the full archive on YouTube.</p></div>
-        <div class="video-frame">
-          <iframe title="IV Static remixes on YouTube" src="https://www.youtube.com/embed?listType=user&list=iv.statik" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-fallback"><span class="play">▶</span><p>Channel archive<br /><strong>@iv.statik</strong></p><a href="https://www.youtube.com/@iv.statik" target="_blank" rel="noreferrer">Open channel ↗</a></div>
+        <div class="video-carousel" aria-roledescription="carousel" aria-label="IV Static remix videos">
+          <div class="carousel-toolbar">
+            <p class="carousel-count" aria-live="polite"><span id="carousel-current">01</span> / 05</p>
+            <div class="carousel-controls">
+              <button class="carousel-button" type="button" data-carousel-prev aria-label="Previous remix video">←</button>
+              <button class="carousel-button" type="button" data-carousel-next aria-label="Next remix video">→</button>
+            </div>
+          </div>
+          <ol class="video-track" data-carousel-track>
+            <li class="video-slide is-active" data-slide="1" aria-label="Video 1 of 5">
+              <iframe title="IV Static remix video 1" src="https://www.youtube.com/embed/2IB_gw8dfb4?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </li>
+            <li class="video-slide" data-slide="2" aria-label="Video 2 of 5">
+              <iframe title="IV Static remix video 2" src="https://www.youtube.com/embed/5m5j97FTJYE?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </li>
+            <li class="video-slide" data-slide="3" aria-label="Video 3 of 5">
+              <iframe title="IV Static remix video 3" src="https://www.youtube.com/embed/WwlmvcGOIQg?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </li>
+            <li class="video-slide" data-slide="4" aria-label="Video 4 of 5">
+              <iframe title="IV Static remix video 4" src="https://www.youtube.com/embed/IWO2oemz1gs?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </li>
+            <li class="video-slide" data-slide="5" aria-label="Video 5 of 5">
+              <iframe title="IV Static remix video 5" src="https://www.youtube.com/embed/WxbVKQ4vEZI?rel=0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </li>
+          </ol>
+          <div class="carousel-dots" role="tablist" aria-label="Choose a remix video">
+            <button class="carousel-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show remix video 1" data-carousel-dot="1"></button>
+            <button class="carousel-dot" type="button" role="tab" aria-selected="false" aria-label="Show remix video 2" data-carousel-dot="2"></button>
+            <button class="carousel-dot" type="button" role="tab" aria-selected="false" aria-label="Show remix video 3" data-carousel-dot="3"></button>
+            <button class="carousel-dot" type="button" role="tab" aria-selected="false" aria-label="Show remix video 4" data-carousel-dot="4"></button>
+            <button class="carousel-dot" type="button" role="tab" aria-selected="false" aria-label="Show remix video 5" data-carousel-dot="5"></button>
+          </div>
+          <div class="video-fallback"><span class="play">▶</span><p>Full remix archive<br /><strong>@iv.statik</strong></p><a href="https://www.youtube.com/@iv.statik" target="_blank" rel="noreferrer">Open channel ↗</a></div>
         </div>
       </section>
 
@@ -66,5 +96,33 @@
     </main>
 
     <footer class="site-footer"><span>© 2026 IV//STATIK</span><span>KEEP THE SIGNAL MOVING <b>↗</b></span><a href="mailto:booking@ivstatik.com">booking@ivstatik.com</a></footer>
+    <script>
+      const track = document.querySelector('[data-carousel-track]');
+      const slides = [...document.querySelectorAll('.video-slide')];
+      const dots = [...document.querySelectorAll('[data-carousel-dot]')];
+      const current = document.querySelector('#carousel-current');
+      let activeSlide = 0;
+
+      function showSlide(index) {
+        activeSlide = (index + slides.length) % slides.length;
+        slides[activeSlide].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === activeSlide));
+        dots.forEach((dot, dotIndex) => {
+          const selected = dotIndex === activeSlide;
+          dot.classList.toggle('is-active', selected);
+          dot.setAttribute('aria-selected', selected);
+        });
+        current.textContent = String(activeSlide + 1).padStart(2, '0');
+      }
+
+      document.querySelector('[data-carousel-prev]').addEventListener('click', () => showSlide(activeSlide - 1));
+      document.querySelector('[data-carousel-next]').addEventListener('click', () => showSlide(activeSlide + 1));
+      dots.forEach((dot, index) => dot.addEventListener('click', () => showSlide(index)));
+      track.addEventListener('scrollend', () => {
+        const closest = slides.reduce((best, slide, index) =>
+          Math.abs(slide.offsetLeft - track.scrollLeft) < Math.abs(slides[best].offsetLeft - track.scrollLeft) ? index : best, 0);
+        if (closest !== activeSlide) showSlide(closest);
+      });
+    </script>
   </body>
 </html>
